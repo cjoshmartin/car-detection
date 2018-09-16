@@ -4,18 +4,22 @@ from PIL import Image
 from pylab import *
 import glob, os
 
-class parseImages():
+import jsonpickle
+import jsonpickle.ext.numpy as jsonpickle_numpy
+jsonpickle_numpy.register_handlers()
+
+class parseImages:
     def __init__(self):
-        self.__dataSet = {
-        'training': {
-            'pos': {},
-            'neg': {},
-        },
-        'test': {
-            'normal': {},
-            'scaled': {},
+        self.__data = {
+            'training': {
+                'pos': {},
+                'neg': {},
+            },
+            'test': {
+                'normal': {},
+                'scaled': {},
+            }
         }
-    }
 
     def toMatrix(self,pic):
         return array(Image.open(pic))
@@ -24,19 +28,20 @@ class parseImages():
         for infile in glob.glob(path):
             file, ext = os.path.splitext(infile)
             dictName = file.split('-')[1]
-            self.__dataSet[type][label][dictName] = self.toMatrix(infile).tolist()
+            self.__data[type][label][dictName] = self.toMatrix(infile)
 
         print('dataset->{}->{} parsed successfully'.format(type,label))
 
     def getData(self):
-            return self.__dataSet
+        return self.__data
 
     def JSONify(self,path):
         print('saving to `{}`'.format(path))
-        json.dump(self.__dataSet, codecs.open(path, 'w', encoding='utf-8'), separators=(',', ':'), indent=4)  ### this saves the array in .json format
+        output = jsonpickle.encode(self.__data)
+        json.dump(output, codecs.open(path, 'w', encoding='utf-8'))  ### this saves the array in .json format
         print('Done saving')
 
-class handleData():
+class handleData:
     def __init__(self):
         output = parseImages()
         output.toMatrixArr('./data_set/TrainImages/pos*.pgm','training','pos')
