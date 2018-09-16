@@ -38,3 +38,7 @@ cmake-build-debug/
 \.idea/
 
 *.rsls
+
+data\.json
+
+*.rslsd
