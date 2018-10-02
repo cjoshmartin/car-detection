@@ -42,3 +42,5 @@ cmake-build-debug/
 data\.json
 
 *.rslsd
+
+utils/__pycache__/
