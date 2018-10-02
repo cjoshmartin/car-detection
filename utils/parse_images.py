@@ -61,3 +61,11 @@ def handle_data(save_path):
 
     return data
 
+def save_image(data):
+
+    im = Image.fromarray(data, 'L')
+    im.show()
+
+
+
+
