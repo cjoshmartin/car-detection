@@ -1,4 +1,4 @@
-from neuron.neuron import Neuron, Convolution
+from neuron.neuron import Neuron, conv
 from utils.parse_images import handle_data, save_image
 import numpy
 
@@ -16,17 +16,12 @@ def main():
     nuron.plot_maps(3, 2)
 
 
-    # next_nuron = Neuron(
-    #     nuron.reduced_maps,
-    #     numpy.max,'Ly2',
-    #     numpy.random.rand(3, 5, 5, nuron.reduced_maps.shape[-1])
-    # )
-    # next_nuron.activate()
-    # next_nuron.plot_maps(3,3)
-    l2_filter = numpy.random.rand(3, 5, 5, nuron.reduced_maps.shape[-1])
-    print("\n**Working with conv layer 2**")
-    l2_feature_map =Convolution(nuron.reduced_maps, l2_filter).feature_maps
-
-    save_image('testy',l2_feature_map[:,:,0])
+    next_nuron = Neuron(
+        nuron.reduced_maps,
+        numpy.max,'Ly2',
+        numpy.random.rand(3, 5, 5, nuron.reduced_maps.shape[-1])
+    )
+    next_nuron.activate()
+    next_nuron.plot_maps(3,3)
 
 main()
