@@ -6,7 +6,9 @@ from numpy.core.umath import floor, ceil
 import matplotlib.pyplot as plt
 
 from utils.general import demations, print_error
-from utils.ploting import graphs, plot, save_plot
+from utils.parse_images import save_image
+from utils.ploting import graphs, save_plot
+
 
 class Convolution:
     def __init__(self, img, conv_filter):
@@ -95,13 +97,16 @@ class Neuron:
     def __init__(self, source, activation, layer_name, filter=None):
 
         self.layer_name = layer_name
+        self.__source = source
+        self.__activation_func = activation
+
+        self.feature_maps = None
+        self.activated_maps = None
+        self.reduced_maps = None
 
         if filter is None:
             # input layer
-
-            __fig, __axes = plt.subplots(nrows=1, ncols=1)
-            plot(__axes, source, 'Input')
-            save_plot(__fig, 'input')
+            save_image('Input', source)
 
             self.filter = numpy.zeros((2, 3, 3))
             self.filter[0, :, :] = numpy.array([[[-1, 0, 1],
@@ -113,9 +118,11 @@ class Neuron:
         else:
             self.filter = filter
 
-        self.feature_maps = Convolution(source, self.filter).feature_maps
-        self.activated_maps = relu(self.feature_maps, activation)
-        self.reduced_maps = pooling(self.activated_maps, activation)
+    def activate(self):
+        print('{} Activation'.format(self.layer_name))
+        self.feature_maps = Convolution(self.__source, self.filter).feature_maps
+        self.activated_maps = relu(self.feature_maps, self.__activation_func)
+        self.reduced_maps = pooling(self.activated_maps, self.__activation_func)
 
     def plot_maps(self, rows, cols):
         fig, axes = plt.subplots(nrows=rows, ncols=cols)

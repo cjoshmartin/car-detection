@@ -7,6 +7,7 @@ import glob, os
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 
+from utils.ploting import  plot, save_plot
 jsonpickle_numpy.register_handlers()
 
 
@@ -61,10 +62,10 @@ def handle_data(save_path):
 
     return data
 
-def save_image(data):
-
-    im = Image.fromarray(data, 'L')
-    im.show()
+def save_image(name, source):
+    __fig, __axes = plt.subplots(nrows=1, ncols=1)
+    plot(__axes, source, name)
+    save_plot(__fig, name)
 
 
 
