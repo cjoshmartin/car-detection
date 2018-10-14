@@ -44,3 +44,9 @@ data\.json
 *.rslsd
 
 utils/__pycache__/
+
+output/
+
+neuron/__pycache__/
+
+venv/
