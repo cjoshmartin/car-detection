@@ -76,18 +76,18 @@ def conv(img, conv_filter):
     return feature_maps  # Returning all feature maps.
 
 
-def relu(feature_map, activation):  # Activation function, normalize of what is passed from the convolution stage
+def relu(feature_map):  # Activation function, normalize of what is passed from the convolution stage
     output = zeros(feature_map.shape)
 
     for map_num in range(feature_map.shape[-1]):
         for r in arange(0, feature_map.shape[0]):
             for c in arange(0, feature_map.shape[1]):
-                output[r, c, map_num] = activation([feature_map[r, c, map_num], 0])
+                output[r, c, map_num] = numpy.max([feature_map[r, c, map_num], 0])
 
     return output
 
 
-def pooling(feature_map, activation, size=2, stride=2):
+def pooling(feature_map,size=2, stride=2):
     # Preparing the output of the pooling operation.
     pool_out = zeros((uint16((feature_map.shape[0] - size + 1) / stride + 1),
                       uint16((feature_map.shape[1] - size + 1) / stride + 1),
@@ -97,7 +97,7 @@ def pooling(feature_map, activation, size=2, stride=2):
         for r in arange(0, feature_map.shape[0] - size + 1, stride):
             c2 = 0
             for c in arange(0, feature_map.shape[1] - size + 1, stride):
-                pool_out[r2, c2, map_num] = activation([feature_map[r:r + size, c:c + size]])
+                pool_out[r2, c2, map_num] = numpy.max([feature_map[r:r + size, c:c + size]])
                 c2 = c2 + 1
             r2 = r2 + 1
     return pool_out
@@ -121,10 +121,10 @@ class Neuron:
 
             self.filter = numpy.zeros((2, 3, 3))
             self.filter[0, :, :] = numpy.array([[[-1, 0, 1],
-                                                 [-1, 0, 1],
+                                                 [-1, 0, 1],     # Vertical Lines
                                                  [-1, 0, 1]]])
             self.filter[1, :, :] = numpy.array([[[1, 1, 1],
-                                                 [0, 0, 0],
+                                                 [0, 0, 0],      # Horizontal Lines
                                                  [-1, -1, -1]]])
         else:
             self.filter = filter
@@ -132,8 +132,8 @@ class Neuron:
     def activate(self):
         print('{} Activation'.format(self.layer_name))
         self.feature_maps = conv(self.__source, self.filter)
-        self.activated_maps = relu(self.feature_maps, self.__activation_func)
-        self.reduced_maps = pooling(self.activated_maps, self.__activation_func)
+        self.activated_maps = self.__activation_func(self.feature_maps)
+        self.reduced_maps = pooling(self.activated_maps)
 
     def plot_maps(self, rows, cols):
         fig, axes = plt.subplots(nrows=rows, ncols=cols)
