@@ -9,6 +9,10 @@ from utils.general import dimensions, print_error
 from utils.parse_images import save_image
 from utils.ploting import graphs, save_plot
 
+def dot_product(image, filter):
+    # Element-wise multiplication between the current region and the filter.
+    element_wise_multip = image * filter
+    return numpy.sum(element_wise_multip) # summing the results of the multiplication
 
 def conv_(img, conv_filter):
     filter_size = conv_filter.shape[1]
@@ -31,6 +35,7 @@ def conv_(img, conv_filter):
             curr_result = curr_region * conv_filter
             conv_sum = numpy.sum(curr_result)  # Summing the result of multiplication.
             result[r, c] = conv_sum  # Saving the summation in the convolution layer feature map.
+            result[row, column] = dot_product(curr_region, conv_filter)  # Saving the summation in the convolution layer feature map.
 
     # Clipping the outliers of the result matrix.
     final_result = result[numpy.uint16(filter_size / 2.0):result.shape[0] - numpy.uint16(filter_size / 2.0),
