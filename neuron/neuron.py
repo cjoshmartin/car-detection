@@ -90,9 +90,9 @@ def relu(feature_map):  # Activation function, normalize of what is passed from 
     output = zeros(feature_map.shape)
 
     for map_num in range(feature_map.shape[-1]):
-        for r in arange(0, feature_map.shape[0]):
-            for c in arange(0, feature_map.shape[1]):
-                output[r, c, map_num] = numpy.max([feature_map[r, c, map_num], 0])
+        for row in arange(0, feature_map.shape[0]):
+            for column in arange(0, feature_map.shape[1]):
+                output[row, column, map_num] = numpy.max([0, feature_map[row, column, map_num]])
 
     return output
 
