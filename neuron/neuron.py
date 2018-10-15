@@ -14,9 +14,18 @@ def dot_product(image, filter):
     element_wise_multip = image * filter
     return numpy.sum(element_wise_multip) # summing the results of the multiplication
 
+def convolution_range(half_filter_size,location):
+    __range = numpy.arange(half_filter_size, location - half_filter_size + 1)
+    return numpy.uint16(__range)
 def conv_(img, conv_filter):
     filter_size = conv_filter.shape[1]
-    result = numpy.zeros((img.shape))
+    half_filter_size = filter_size / 2.0
+    result = numpy.zeros(img.shape)
+
+
+    row_range = convolution_range(half_filter_size, img.shape[0])
+    column_range = convolution_range(half_filter_size, img.shape[1])
+
     # Looping through the image to apply the convolution operation.
     for r in numpy.uint16(numpy.arange(filter_size / 2.0,
                                        img.shape[0] - filter_size / 2.0 + 1)):
