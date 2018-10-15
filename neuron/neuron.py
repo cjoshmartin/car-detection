@@ -5,7 +5,7 @@ from numpy.core.multiarray import zeros, arange
 from numpy.core.umath import floor, ceil
 import matplotlib.pyplot as plt
 
-from utils.general import demations, print_error
+from utils.general import dimensions, print_error
 from utils.parse_images import save_image
 from utils.ploting import graphs, save_plot
 
@@ -89,14 +89,18 @@ def relu(feature_map):  # Activation function, normalize of what is passed from 
 
 def pooling(feature_map,size=2, stride=2):
     # Preparing the output of the pooling operation.
-    pool_out = zeros((uint16((feature_map.shape[0] - size + 1) / stride + 1),
-                      uint16((feature_map.shape[1] - size + 1) / stride + 1),
+    # https://www.quora.com/What-is-max-pooling-in-convolutional-neural-networks
+
+    d_out = dimensions(feature_map.shape, size)
+    pool_out = zeros((uint16(d_out[0] / stride + 1),
+                      uint16(d_out[1] / stride + 1),
                       feature_map.shape[-1]))
+
     for map_num in range(feature_map.shape[-1]):
         r2 = 0
-        for r in arange(0, feature_map.shape[0] - size + 1, stride):
+        for row in arange(0, d_out[0], stride):
             c2 = 0
-            for c in arange(0, feature_map.shape[1] - size + 1, stride):
+            for column in arange(0, d_out[1], stride):
                 pool_out[r2, c2, map_num] = numpy.max([feature_map[r:r + size, c:c + size]])
                 c2 = c2 + 1
             r2 = r2 + 1
