@@ -87,7 +87,7 @@ def relu(feature_map):  # Activation function, normalize of what is passed from 
     return output
 
 
-def pooling(feature_map,size=2, stride=2):
+def max_pooling(feature_map, size=2, stride=2):
     # Preparing the output of the pooling operation.
     # https://www.quora.com/What-is-max-pooling-in-convolutional-neural-networks
 
@@ -97,13 +97,13 @@ def pooling(feature_map,size=2, stride=2):
                       feature_map.shape[-1]))
 
     for map_num in range(feature_map.shape[-1]):
-        r2 = 0
+        row2 = 0
         for row in arange(0, d_out[0], stride):
-            c2 = 0
+            column2 = 0
             for column in arange(0, d_out[1], stride):
-                pool_out[r2, c2, map_num] = numpy.max([feature_map[r:r + size, c:c + size]])
-                c2 = c2 + 1
-            r2 = r2 + 1
+                pool_out[row2, column2, map_num] = numpy.max([feature_map[row : row + size, column : column + size]]) # finds the max out of range of values
+                column2 = column2 + 1
+            row2 = row2 + 1
     return pool_out
 
 
