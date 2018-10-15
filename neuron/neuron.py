@@ -143,6 +143,9 @@ class Neuron:
         else:
             self.filter = filter
 
+    def set_image(self, image):
+        self.__source = image
+
     def activate(self, shouldPool=True):
         print('{} Activation'.format(self.layer_name))
         self.feature_maps = conv(self.__source, self.filter)
@@ -151,9 +154,10 @@ class Neuron:
         if shouldPool:
             self.reduced_maps = max_pooling(self.activated_maps)
 
-    def plot_maps(self, rows, cols):
-        fig, axes = plt.subplots(nrows=rows, ncols=cols)
+    def plot_maps(self, i):
+        fig, axes = plt.subplots(nrows=3, ncols=3)
         graphs(axes[0], self.feature_maps, '{}-Map{}', self.layer_name)
         graphs(axes[1], self.activated_maps, '{}-Map{}ReLU', self.layer_name)
         graphs(axes[2], self.reduced_maps, '{}-Map{}ReLUPool', self.layer_name)
-        save_plot(fig, self.layer_name)
+
+        save_plot(fig, '{}-{}'.format(i, self.layer_name))
