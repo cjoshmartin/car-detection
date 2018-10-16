@@ -14,8 +14,8 @@ def dot_product(image, filter):
     element_wise_multip = image * filter
     return numpy.sum(element_wise_multip) # summing the results of the multiplication
 
-def convolution_range(half_filter_size,location):
-    __range = numpy.arange(half_filter_size, location - half_filter_size + 1)
+def convolution_range(half_filter_size,location, stride=1):
+    __range = numpy.arange(half_filter_size, location - half_filter_size + 1, stride)
     return numpy.uint16(__range)
 
 def conv_(img, conv_filter):
@@ -47,11 +47,10 @@ def conv_(img, conv_filter):
 
     # Clipping the outliers of the result matrix.
     hfs_int = numpy.uint16(half_filter_size) # converting half_filter_size to an int
-    final_result = result[
+    return result[
                    hfs_int: result.shape[0] - hfs_int,
                    hfs_int: result.shape[1] - hfs_int
                    ]
-    return final_result
 
 
 def conv(img, conv_filter):
