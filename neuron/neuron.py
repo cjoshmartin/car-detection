@@ -127,6 +127,7 @@ class Neuron:
         self.feature_maps = None
         self.activated_maps = None
         self.reduced_maps = None
+        self.shouldPool = True
 
         if filter is None:
             # input layer
@@ -145,18 +146,35 @@ class Neuron:
     def set_image(self, image):
         self.__source = image
 
-    def activate(self, shouldPool=True):
+    def set_should_pooling(self, val):
+        self.shouldPool = val
+
+    def get_map(self):
+        if self.reduced_maps is not None:
+            return self.reduced_maps
+        if self.activated_maps is not None:
+            return self.activated_maps
+        if self.feature_maps is not None:
+            return self.feature_maps
+
+        print('Man you messed something up, look at your code for your maps')
+
+    def toggle_pooling(self):
+        self.shouldPool = not self.shouldPool
+
+    def activate(self):
         print('{} Activation'.format(self.layer_name))
         self.feature_maps = conv(self.__source, self.filter)
         self.activated_maps = self.__activation_func(self.feature_maps)
 
-        if shouldPool:
+        if self.shouldPool:
             self.reduced_maps = max_pooling(self.activated_maps)
 
     def plot_maps(self, i):
         fig, axes = plt.subplots(nrows=3, ncols=3)
         graphs(axes[0], self.feature_maps, '{}-Map{}', self.layer_name)
         graphs(axes[1], self.activated_maps, '{}-Map{}ReLU', self.layer_name)
-        graphs(axes[2], self.reduced_maps, '{}-Map{}ReLUPool', self.layer_name)
+        if self.shouldPool:
+            graphs(axes[2], self.reduced_maps, '{}-Map{}ReLUPool', self.layer_name)
 
         save_plot(fig, '{}-{}'.format(i, self.layer_name))

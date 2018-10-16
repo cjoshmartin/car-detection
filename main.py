@@ -15,6 +15,7 @@ def main():
     sample = training_data['pos']['0']
     sample_2 = [ training_data['pos'], training_data['neg']]
     prev_neuron = Neuron(sample, activation, 'Ly1')
+    prev_neuron.set_should_pooling(False)
     prev_neuron.activate()
     prev_neuron.plot_maps(0)
 
@@ -24,17 +25,17 @@ def main():
 
     for i in range(1, 3):
         neuron = Neuron(
-            prev_neuron.reduced_maps,
+            prev_neuron.get_map(),
             activation,
             'Ly{}'.format(i + 1),
             numpy.random.rand(
                 meh[i-1][0],
                 meh[i-1][1],
                 meh[i-1][2],
-                prev_neuron.reduced_maps.shape[-1]
+                prev_neuron.get_map().shape[-1]
             )
         )
-
+        neuron.set_should_pooling(False)
         network.append(neuron)
 
         neuron.activate()
@@ -55,12 +56,12 @@ def main():
                 if j == 0:
                     network[j].set_image(sample)
                 else:
-                    network[j].set_image(network[j-1].reduced_maps)
+                    network[j].set_image(network[j-1].get_map())
 
                 network[j].activate()
 
-
                 network[j].plot_maps(i)
+
             if i == 10:
                 break
         epoch = epoch + 1
