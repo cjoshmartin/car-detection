@@ -14,8 +14,8 @@ def dot_product(image, filter):
     element_wise_multip = image * filter
     return numpy.sum(element_wise_multip) # summing the results of the multiplication
 
-def convolution_range(half_filter_size,location):
-    __range = numpy.arange(half_filter_size, location - half_filter_size + 1)
+def convolution_range(half_filter_size,location, stride=1):
+    __range = numpy.arange(half_filter_size, location - half_filter_size + 1, stride)
     return numpy.uint16(__range)
 
 def conv_(img, conv_filter):
@@ -47,11 +47,10 @@ def conv_(img, conv_filter):
 
     # Clipping the outliers of the result matrix.
     hfs_int = numpy.uint16(half_filter_size) # converting half_filter_size to an int
-    final_result = result[
+    return result[
                    hfs_int: result.shape[0] - hfs_int,
                    hfs_int: result.shape[1] - hfs_int
                    ]
-    return final_result
 
 
 def conv(img, conv_filter):
@@ -128,6 +127,7 @@ class Neuron:
         self.feature_maps = None
         self.activated_maps = None
         self.reduced_maps = None
+        self.shouldPool = True
 
         if filter is None:
             # input layer
@@ -143,17 +143,38 @@ class Neuron:
         else:
             self.filter = filter
 
-    def activate(self, shouldPool=True):
+    def set_image(self, image):
+        self.__source = image
+
+    def set_should_pooling(self, val):
+        self.shouldPool = val
+
+    def get_map(self):
+        if self.reduced_maps is not None:
+            return self.reduced_maps
+        if self.activated_maps is not None:
+            return self.activated_maps
+        if self.feature_maps is not None:
+            return self.feature_maps
+
+        print('Man you messed something up, look at your code for your maps')
+
+    def toggle_pooling(self):
+        self.shouldPool = not self.shouldPool
+
+    def activate(self):
         print('{} Activation'.format(self.layer_name))
         self.feature_maps = conv(self.__source, self.filter)
         self.activated_maps = self.__activation_func(self.feature_maps)
 
-        if shouldPool:
+        if self.shouldPool:
             self.reduced_maps = max_pooling(self.activated_maps)
 
-    def plot_maps(self, rows, cols):
-        fig, axes = plt.subplots(nrows=rows, ncols=cols)
+    def plot_maps(self, i):
+        fig, axes = plt.subplots(nrows=3, ncols=3)
         graphs(axes[0], self.feature_maps, '{}-Map{}', self.layer_name)
         graphs(axes[1], self.activated_maps, '{}-Map{}ReLU', self.layer_name)
-        graphs(axes[2], self.reduced_maps, '{}-Map{}ReLUPool', self.layer_name)
-        save_plot(fig, self.layer_name)
+        if self.shouldPool:
+            graphs(axes[2], self.reduced_maps, '{}-Map{}ReLUPool', self.layer_name)
+
+        save_plot(fig, '{}-{}'.format(i, self.layer_name))
