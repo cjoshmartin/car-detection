@@ -50,3 +50,5 @@ output/
 neuron/__pycache__/
 
 venv/
+
+network/__pycache__/
