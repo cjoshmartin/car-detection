@@ -1,7 +1,6 @@
 from network.network import Network
-from neuron.neuron import Neuron, relu
+from neuron.activations import relu
 from utils.parse_images import handle_data
-import numpy
 
 
 # def create_filter
