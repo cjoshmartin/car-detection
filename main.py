@@ -1,5 +1,5 @@
 from network.network import Network
-from neuron.activations import relu
+from utils.activations import relu
 from utils.parse_images import handle_data
 
 

@@ -13,6 +13,9 @@ from utils.ploting import graphs, save_plot
 def max_pooling(feature_map, size=2, stride=2):
     # Preparing the output of the pooling operation.
     # https://www.quora.com/What-is-max-pooling-in-convolutional-neural-networks
+    # ALT: Doing average pooling, were you take the average of each section
+    # - Makes it easy to make space smaller
+    #   Ex: 7 X 7 X 100 -> 1 X 1 X 100
 
     d_out = dimensions(feature_map.shape, size, stride)
     pool_out = zeros((uint16(numpy.floor(d_out[0])),
