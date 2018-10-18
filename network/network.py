@@ -7,7 +7,7 @@ class Network:
     def __init__(self, activation, sample_image, layer_configuration, should_pool=True):
 
         self.__prev_neuron = Neuron(sample_image, activation, 'Ly1')
-        self.__prev_neuron.set_should_pooling(True)
+        self.__prev_neuron.set_should_pooling(should_pool)
         self.__prev_neuron.activate()
         self.__network = [self.__prev_neuron]
 
