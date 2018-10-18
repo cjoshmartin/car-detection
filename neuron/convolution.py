@@ -59,7 +59,7 @@ def conv(img, conv_filter):
         print_error('Error: Filter must have an odd size. I.e. number of rows and columns must be odd.')
 
     # An empty feature map to hold the output of convolving the filter(s) with the image.
-    d_out = dimensions(img.shape, conv_filter.shape[1], conv_filter.shape[0])
+    d_out = dimensions(img.shape, conv_filter.shape[1], conv_filter.shape[0]) # TODO look at, maybe setting the wrong demantions
     feature_maps = numpy.zeros(d_out)
 
     # Convolving the image by the filter(s).

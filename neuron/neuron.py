@@ -14,9 +14,9 @@ def max_pooling(feature_map, size=2, stride=2):
     # Preparing the output of the pooling operation.
     # https://www.quora.com/What-is-max-pooling-in-convolutional-neural-networks
 
-    d_out = dimensions(feature_map.shape, size)
-    pool_out = zeros((uint16(d_out[0] / stride + 1),
-                      uint16(d_out[1] / stride + 1),
+    d_out = dimensions(feature_map.shape, size, stride)
+    pool_out = zeros((uint16(numpy.floor(d_out[0])),
+                      uint16(numpy.floor(d_out[1])),
                       feature_map.shape[-1]))
 
     for map_num in range(feature_map.shape[-1]):
