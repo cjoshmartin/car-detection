@@ -11,3 +11,7 @@ def relu(feature_map):  # Activation function, normalize of what is passed from 
                 output[row, column, map_num] = numpy.max([0, feature_map[row, column, map_num]])
 
     return output
+
+def softmax(feature_map):
+    exponential = numpy.exp(feature_map)
+    return exponential/numpy.sum(exponential)
