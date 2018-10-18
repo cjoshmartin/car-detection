@@ -76,9 +76,9 @@ class Neuron:
     def toggle_pooling(self):
         self.shouldPool = not self.shouldPool
 
-    def activate(self):
+    def activate(self, bais = 0):
         print('{} Activation'.format(self.layer_name))
-        self.feature_maps = conv(self.__source, self.filter)
+        self.feature_maps = numpy.add(conv(self.__source, self.filter), bais)
         self.activated_maps = self.__activation_func(self.feature_maps)
 
         if self.shouldPool:
