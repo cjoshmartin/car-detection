@@ -25,7 +25,7 @@ class ParseImages:
         }
 
     def to_matrix(self, pic):
-        return array(Image.open(pic))
+        return array(Image.open(pic).convert('L'))
 
     def to_matrix_arr(self, path, type, label):
         for infile in glob.glob(path):
@@ -44,6 +44,8 @@ class ParseImages:
         json.dump(output, codecs.open(path, 'w', encoding='utf-8'))  ### this saves the array in .json format
         print('Done saving')
 
+    def append(self, loc, type, is_car, dictName):
+        self.__data[type][is_car][dictName] = self.to_matrix(loc)
 
 def handle_data(save_path):
     if os.path.isfile(save_path):
@@ -53,10 +55,12 @@ def handle_data(save_path):
     else:
         print('`{}` does not exist, watch me create it!'.format(save_path))
         output = ParseImages()
-        output.to_matrix_arr('./data_set/TrainImages/pos*.pgm', 'training', 'pos')
-        output.to_matrix_arr('./data_set/TrainImages/neg*.pgm', 'training', 'neg')
-        output.to_matrix_arr('./data_set/TestImages/test*.pgm', 'test', 'normal')
-        output.to_matrix_arr('./data_set/TestImages_Scale/test*.pgm', 'test', 'scaled')
+        output.to_matrix_arr('./data_set/uiuc/TrainImages/pos*.pgm', 'training', 'pos')
+        output.to_matrix_arr('./data_set/caltech/training/pos*.jpg', 'training', 'pos')
+        output.to_matrix_arr('./data_set/uiuc/TrainImages/neg*.pgm', 'training', 'neg')
+        output.to_matrix_arr('./data_set/uiuc/TestImages/test*.pgm', 'test', 'normal')
+        output.to_matrix_arr('./data_set/caltech/testing/test*.jpg', 'test', 'normal')
+        output.to_matrix_arr('./data_set/uiuc/TestImages_Scale/test*.pgm', 'test', 'scaled')
         output.JSONify(save_path)
         data = output.get_data()
 

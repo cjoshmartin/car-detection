@@ -1,18 +1,20 @@
 import sys
 
 
-def dimensions(tuple1, filter__, size=0, stripe= None):
+def dimensions(tuple1, filter__, size=0, stripe=None):
+    d1_sub = max(0, tuple1[0] - filter__)
+    d2_sub = max(0, tuple1[1] - filter__)
+
     if stripe is not None:
-        d1 = (tuple1[0] - filter__) / stripe + 1
-        d2 = (tuple1[1] - filter__) / stripe + 1
+        d1 = d1_sub / stripe + 1
+        d2 = d2_sub / stripe + 1
         return tuple((d1, d2, size))
 
-    d1 = tuple1[0] - filter__ + 1
-    d2 = tuple1[1] - filter__ + 1
+    d1 = d1_sub + 1
+    d2 = d2_sub + 1
 
     return tuple((d1, d2, size))
 
 
 def print_error(msg):
-    print(msg)
-    sys.exit()
+    raise Exception(msg)

@@ -53,10 +53,10 @@ def conv(img, conv_filter):
     if len(img.shape) > 2 or len(conv_filter.shape) > 3:  # Check if number of image channels matches the filter depth.
         if img.shape[-1] != conv_filter.shape[-1]:
             print_error("Error: Number of channels in both image and filter must match.")
-    if conv_filter.shape[1] != conv_filter.shape[2]:  # Check if filter dimensions are equal.
-        print_error('Error: Filter must be a square matrix. I.e. number of rows and columns must match.')
-    if conv_filter.shape[1] % 2 == 0:  # Check if filter diemnsions are odd.
-        print_error('Error: Filter must have an odd size. I.e. number of rows and columns must be odd.')
+    # if conv_filter.shape[1] != conv_filter.shape[2]:  # Check if filter dimensions are equal.
+    #     print_error('Error: Filter must be a square matrix. I.e. number of rows and columns must match.')
+    # if conv_filter.shape[1] % 2 == 0:  # Check if filter diemnsions are odd.
+    #     print_error('Error: Filter must have an odd size. I.e. number of rows and columns must be odd.')
 
     # An empty feature map to hold the output of convolving the filter(s) with the image.
     d_out = dimensions(img.shape, conv_filter.shape[1], conv_filter.shape[0]) # TODO look at, maybe setting the wrong demantions
@@ -65,6 +65,7 @@ def conv(img, conv_filter):
     # Convolving the image by the filter(s).
     for filter_num in range(conv_filter.shape[0]):
         print("Filter ", filter_num + 1)
+        #TODO: This next line fucks up the fully connected layer gives the object the wrong shape
         curr_filter = conv_filter[filter_num, :]  # getting a filter from the bank.
         """ 
         Checking if there are mutliple channels for the single filter.
