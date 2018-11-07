@@ -1,16 +1,6 @@
+from neuron.full_connected import FullConnected, fc_layer
 from neuron.neuron import Neuron
-import numpy
-
-from utils.activations import softmax
-
-
-def get_random_filter(shape, number_of_filters):
-    return numpy.random.rand(
-        shape[0],
-        shape[1],
-        shape[2],
-        number_of_filters
-    )
+import utils.general as general
 
 
 class Network:
@@ -28,7 +18,7 @@ class Network:
                 self.__prev_neuron.get_map(),
                 activation,
                 'Ly{}'.format(i + 2),
-                get_random_filter(
+                general.get_random_filter(
                     layer_configuration[i],
                     self.__prev_neuron.get_map().shape[-1]
                     # TODO: find a way to decompile this, cause to have to run activation function to have shape
@@ -41,18 +31,10 @@ class Network:
             self.__prev_neuron = neuron
 
         tacos = self.__prev_neuron.get_map()
-        neuron = Neuron( # Fully Connected layer
-           tacos,
-            softmax,  # classifier
-            'Full Connected Layer',
-            get_random_filter(
-                tacos.shape, # TODO: Transpose this shit, motherfucking bitch
-                self.__prev_neuron.get_map().shape[-1]
-            )
-        )
+        neuron = fc_layer(tacos)  # Full Connected Layer
 
-        neuron.set_should_pooling(False) # Do not want down-sampling on output layer
-        neuron.activate()   # Do I need this
+        neuron.set_should_pooling(False)  # Do not want down-sampling on output layer
+        neuron.activate()  # Do I need this
         self.__network.append(neuron)
 
     def train(self, input_data, cur_epoch, batch_size):

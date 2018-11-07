@@ -50,15 +50,7 @@ def conv_(img, conv_filter):
 
 
 def conv(img, conv_filter):
-    if len(img.shape) > 2 or len(conv_filter.shape) > 3:  # Check if number of image channels matches the filter depth.
-        if img.shape[-1] != conv_filter.shape[-1]:
-            print_error("Error: Number of channels in both image and filter must match.")
-    # if conv_filter.shape[1] != conv_filter.shape[2]:  # Check if filter dimensions are equal.
-    #     print_error('Error: Filter must be a square matrix. I.e. number of rows and columns must match.')
-    # if conv_filter.shape[1] % 2 == 0:  # Check if filter diemnsions are odd.
-    #     print_error('Error: Filter must have an odd size. I.e. number of rows and columns must be odd.')
-
-    # An empty feature map to hold the output of convolving the filter(s) with the image.
+    # An empty feature map to hold the output of convoluting the filter(s) with the image.
     d_out = dimensions(img.shape, conv_filter.shape[1], conv_filter.shape[0]) # TODO look at, maybe setting the wrong demantions
     feature_maps = numpy.zeros(d_out)
 
@@ -76,7 +68,14 @@ def conv(img, conv_filter):
             conv_map = conv_(img[:, :, 0], curr_filter[:, :, 0])  # Array holding the sum of all feature maps.
             for ch_num in range(1, curr_filter.shape[-1]):  # Convolving each channel with the image and summing the results.
                 conv_map = conv_map + conv_(img[:, :, ch_num], curr_filter[:, :, ch_num])
-        else:  # There is just a single channel in the filter.
+        # else:  # There is just a single channel in the filter.
+        # if len(img.shape) > 2:
+        #     conv_map = conv_(img[:, :, 0], curr_filter)  # Array holding the sum of all feature maps.
+        #     for ch_num in range(1, img.shape[-1]):  # Convolving each channel with the image and summing the results.
+        #         conv_map = conv_map + conv_(img[:, :, ch_num], curr_filter)
+
+        else:
             conv_map = conv_(img, curr_filter)
+
         feature_maps[:, :, filter_num] = conv_map  # Holding feature map with the current filter.
     return feature_maps  # Returning all feature maps.

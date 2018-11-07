@@ -27,7 +27,8 @@ def max_pooling(feature_map, size=2, stride=2):
         for row in arange(0, d_out[0], stride):
             column2 = 0
             for column in arange(0, d_out[1], stride):
-                pool_out[row2, column2, map_num] = numpy.max([feature_map[row : row + size, column : column + size]]) # finds the max out of range of values
+                pool_out[row2, column2, map_num] = numpy.max(
+                    [feature_map[row: row + size, column: column + size]])  # finds the max out of range of values
                 column2 = column2 + 1
             row2 = row2 + 1
     return pool_out
@@ -52,10 +53,10 @@ class Neuron:
 
             self.filter = numpy.zeros((2, 3, 3))
             self.filter[0, :, :] = numpy.array([[[-1, 0, 1],
-                                                 [-1, 0, 1],     # Vertical Lines
+                                                 [-1, 0, 1],  # Vertical Lines
                                                  [-1, 0, 1]]])
             self.filter[1, :, :] = numpy.array([[[1, 1, 1],
-                                                 [0, 0, 0],      # Horizontal Lines
+                                                 [0, 0, 0],  # Horizontal Lines
                                                  [-1, -1, -1]]])
         else:
             self.filter = filter
@@ -79,9 +80,12 @@ class Neuron:
     def toggle_pooling(self):
         self.shouldPool = not self.shouldPool
 
-    def activate(self, bais = 0):
+    def conv(self, bias):
+        return numpy.add(conv(self.__source, self.filter), bias)
+
+    def activate(self, bias=0):
         print('{} Activation'.format(self.layer_name))
-        self.feature_maps = numpy.add(conv(self.__source, self.filter), bais)
+        self.feature_maps = self.conv(bias)
         self.activated_maps = self.__activation_func(self.feature_maps)
 
         if self.shouldPool:

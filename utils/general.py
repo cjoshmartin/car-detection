@@ -1,4 +1,4 @@
-import sys
+import numpy
 
 
 def dimensions(tuple1, filter__, size=0, stripe=None):
@@ -18,3 +18,12 @@ def dimensions(tuple1, filter__, size=0, stripe=None):
 
 def print_error(msg):
     raise Exception(msg)
+
+
+def get_random_filter(shape, number_of_filters):
+    return numpy.random.rand(
+        shape[0],
+        shape[1],
+        shape[2],
+        number_of_filters
+    )
