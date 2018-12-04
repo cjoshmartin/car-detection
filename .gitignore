@@ -52,3 +52,5 @@ neuron/__pycache__/
 venv/
 
 network/__pycache__/
+
+sample_images\.png

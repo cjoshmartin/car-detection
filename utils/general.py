@@ -21,9 +21,10 @@ def print_error(msg):
 
 
 def get_random_filter(shape, number_of_filters):
-    return numpy.random.rand(
+    filter = numpy.random.rand(
         shape[0],
         shape[1],
         shape[2],
         number_of_filters
     )
+    return filter

@@ -28,7 +28,7 @@ class FullConnected(Neuron):
 
         last_layer = self._Neuron__source
         d_out = general.dimensions(last_layer.shape, self.filter.shape[1],
-                                   self.filter.shape[0])  # TODO look at, maybe setting the wrong demantions
+                                   self.filter.shape[0])
         feature_maps = numpy.zeros(d_out)
         k = 0
         for i in range(self.filter.shape[-1]):
@@ -40,5 +40,3 @@ class FullConnected(Neuron):
 
         return feature_maps
 
-        # for neuron in last_layer[-1]:
-        #  numpy.add(last_layer, self.filter)

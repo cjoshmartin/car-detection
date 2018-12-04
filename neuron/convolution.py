@@ -23,14 +23,8 @@ def conv_(img, conv_filter):
     row_range = convolution_range(half_filter_size, img.shape[0])
     column_range = convolution_range(half_filter_size, img.shape[1])
 
-    # Looping through the image to apply the convolution operation.
     for row in row_range:
         for column in column_range:
-            """
-            Getting the current region to get multiplied with the filter.
-            How to loop through the image and get the region based on 
-            the image and filer sizes is the most tricky part of convolution.
-            """
             floor_of_filter = numpy.uint16(numpy.floor(half_filter_size))
             ceil_of_filter = numpy.uint16(numpy.ceil(half_filter_size))
 
@@ -42,40 +36,29 @@ def conv_(img, conv_filter):
             result[row, column] = dot_product(curr_region, conv_filter)  # Saving the summation in the convolution layer feature map.
 
     # Clipping the outliers of the result matrix.
-    hfs_int = numpy.uint16(half_filter_size) # converting half_filter_size to an int
+    trimmed_zeros = numpy.uint16(half_filter_size) # converting half_filter_size to an int
     return result[
-                   hfs_int: result.shape[0] - hfs_int,
-                   hfs_int: result.shape[1] - hfs_int
+                   trimmed_zeros: result.shape[0] - trimmed_zeros,
+                   trimmed_zeros: result.shape[1] - trimmed_zeros
                    ]
 
 
 def conv(img, conv_filter):
     # An empty feature map to hold the output of convoluting the filter(s) with the image.
-    d_out = dimensions(img.shape, conv_filter.shape[1], conv_filter.shape[0]) # TODO look at, maybe setting the wrong demantions
+    d_out = dimensions(img.shape, conv_filter.shape[1], conv_filter.shape[0])
     feature_maps = numpy.zeros(d_out)
 
     # Convolving the image by the filter(s).
     for filter_num in range(conv_filter.shape[0]):
         print("Filter ", filter_num + 1)
-        #TODO: This next line fucks up the fully connected layer gives the object the wrong shape
-        curr_filter = conv_filter[filter_num, :]  # getting a filter from the bank.
-        """ 
-        Checking if there are mutliple channels for the single filter.
-        If so, then each channel will convolve the image.
-        The result of all convolutions are summed to return a single feature map.
-        """
-        if len(curr_filter.shape) > 2:
-            conv_map = conv_(img[:, :, 0], curr_filter[:, :, 0])  # Array holding the sum of all feature maps.
-            for ch_num in range(1, curr_filter.shape[-1]):  # Convolving each channel with the image and summing the results.
-                conv_map = conv_map + conv_(img[:, :, ch_num], curr_filter[:, :, ch_num])
-        # else:  # There is just a single channel in the filter.
-        # if len(img.shape) > 2:
-        #     conv_map = conv_(img[:, :, 0], curr_filter)  # Array holding the sum of all feature maps.
-        #     for ch_num in range(1, img.shape[-1]):  # Convolving each channel with the image and summing the results.
-        #         conv_map = conv_map + conv_(img[:, :, ch_num], curr_filter)
+        current_filter = conv_filter[filter_num, :]  # getting a filter from the bank.
 
+        if len(current_filter.shape) > 2:
+            convolution_map = conv_(img[:, :, 0], current_filter[:, :, 0])  # Array holding the sum of all feature maps.
+            for channel_number in range(1, current_filter.shape[-1]):  # Convolving each channel with the image and summing the results.
+                convolution_map = convolution_map + conv_(img[:, :, channel_number], current_filter[:, :, channel_number])
         else:
-            conv_map = conv_(img, curr_filter)
+            convolution_map = conv_(img, current_filter)
 
-        feature_maps[:, :, filter_num] = conv_map  # Holding feature map with the current filter.
+        feature_maps[:, :, filter_num] = convolution_map  # Holding feature map with the current filter.
     return feature_maps  # Returning all feature maps.

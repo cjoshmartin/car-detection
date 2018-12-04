@@ -1,9 +1,7 @@
 from network.network import Network
-from utils.activations import relu
+import utils.activations as activations
 from utils.parse_images import handle_data
 
-
-# def create_filter
 
 def main():
     data = handle_data('./data.json')
@@ -11,18 +9,20 @@ def main():
     training_data = data['training']
     test_data = data['test']
     sample = [training_data['pos'], training_data['neg']]
-    activation = relu
+    activation = activations.relu
 
-    layer_config = [[3, 5, 5]]
+    layer_config = [
+        [3, 5, 5]
+    ]
 
     cnn_network = Network(activation, training_data['pos']['550'], layer_config)
-    #
-    # epoch = 0
-    #
-    # # while True:
-    # print('\nEpoch #{}\n'.format(epoch))
-    # cnn_network.train(sample, epoch, 2)
-    # epoch += 1
+
+    epoch = 0
+
+    # while True:
+    print('\nEpoch #{}\n'.format(epoch))
+    cnn_network.train(sample, epoch, 10)
+    epoch += 1
 
 
 main()
