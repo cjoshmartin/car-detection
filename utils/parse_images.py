@@ -1,5 +1,6 @@
 import codecs
 import json
+import numpy
 from PIL import Image
 from pylab import *
 import glob, os
@@ -27,11 +28,25 @@ class ParseImages:
     def to_matrix(self, pic):
         return array(Image.open(pic).convert('L'))
 
+    def normalize(self, matrix):
+        matrix -= numpy.mean(matrix, axis=0, dtype=numpy.uint8)
+        cov = numpy.dot(matrix.T, matrix) / matrix.shape[0]
+        U, S, V = np.linalg.svd(cov)
+        Xrot = np.dot(matrix, U)
+        Xrot_reduced = np.dot(matrix, U[:, :100])
+        # whiten the data:
+        # divide by the eigenvalues (which are square roots of the singular values)
+        Xwhite = Xrot / np.sqrt(S + 1e-5)
+        return Xwhite
+
     def to_matrix_arr(self, path, type, label):
         for infile in glob.glob(path):
             file, ext = os.path.splitext(infile)
             dictName = file.split('-')[1]
-            self.__data[type][label][dictName] = self.to_matrix(infile)
+            # tacos = self.to_matrix(infile)
+            normalized_data = self.normalize( self.to_matrix(infile) )
+
+            self.__data[type][label][dictName] = normalized_data
 
         print('dataset->{}->{} parsed successfully'.format(type, label))
 

@@ -17,20 +17,17 @@ def max_pooling(feature_map, size=2, stride=2):
     # - Makes it easy to make space smaller
     #   Ex: 7 X 7 X 100 -> 1 X 1 X 100
 
-    d_out = dimensions(feature_map.shape, size, stride)
-    pool_out = zeros((uint16(numpy.floor(d_out[0])),
-                      uint16(numpy.floor(d_out[1])),
-                      feature_map.shape[-1]))
-
+    pool_out = numpy.zeros((numpy.uint16((feature_map.shape[0] - size + 1) / stride + 1),
+                            numpy.uint16((feature_map.shape[1] - size + 1) / stride + 1),
+                            feature_map.shape[-1]))
     for map_num in range(feature_map.shape[-1]):
-        row2 = 0
-        for row in arange(0, d_out[0], stride):
-            column2 = 0
-            for column in arange(0, d_out[1], stride):
-                pool_out[row2, column2, map_num] = numpy.max(
-                    [feature_map[row: row + size, column: column + size]])  # finds the max out of range of values
-                column2 = column2 + 1
-            row2 = row2 + 1
+        r2 = 0
+        for r in numpy.arange(0, feature_map.shape[0] - size + 1, stride):
+            c2 = 0
+            for c in numpy.arange(0, feature_map.shape[1] - size + 1, stride):
+                pool_out[r2, c2, map_num] = numpy.max([feature_map[r:r + size, c:c + size]])
+                c2 = c2 + 1
+            r2 = r2 + 1
     return pool_out
 
 

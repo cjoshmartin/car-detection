@@ -18,7 +18,6 @@ class Network:
 
     def __init__(self, activation, sample_image, layer_configuration, should_pool=True):
 
-        # sample_image -= numpy.mean(sample_image, axis=0)
         self.__prev_neuron = Neuron(sample_image, activation, 'Ly1')
         self.__prev_neuron.set_should_pooling(should_pool)
         self.__prev_neuron.activate()
@@ -56,7 +55,7 @@ class Network:
         for i in range(len(input_data[1])):
 
             has_a_car = (i + cur_epoch) % 2
-            data = input_data[0]['{}'.format(i)]
+            data = input_data[has_a_car]['{}'.format(i)]
 
             for j in range(len(self.__network) - 1):
                 if j == 0:
